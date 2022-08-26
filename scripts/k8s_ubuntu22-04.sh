@@ -22,25 +22,24 @@ apt-mark hold kubelet kubeadm kubectl
 mkdir -p /etc/containerd
 containerd config default > /etc/containerd/config.toml
 sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
-{
-  cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
-  overlay
-  br_netfilter
-  EOF
-}
+
+cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
+overlay
+br_netfilter
+EOF
 # vim /etc/containerd/config.toml # remove cri from disabled plugins, if listed
 systemctl restart containerd
 systemctl enable containerd
 sed -i '/swap/d' /etc/fstab
 swapoff -a
 systemctl disable --now ufw
-{
+
 cat >>/etc/sysctl.d/kubernetes.conf<<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables  = 1
 net.ipv4.ip_forward                 = 1
 EOF
-}
+
 sysctl --system 
 
 kubeadm init \
