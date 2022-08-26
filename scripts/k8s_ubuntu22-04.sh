@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "Task ===> enter sudo mode"
 sudo -i
 apt update
 apt remove docker docker.io containerd runc
