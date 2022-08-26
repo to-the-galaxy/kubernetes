@@ -1,8 +1,10 @@
 #!/bin/bash
 
-echo "Task ===> enter sudo mode"
-sudo -i
-apt update
+echo "Task ===> apt update"
+# sudo -i
+apt update -qq 
+
+echo "Task ===> remove old versions of docker, containerd, and runc"
 apt remove docker docker.io containerd runc
 apt install apt-transport-https ca-certificates curl -y
 
