@@ -55,7 +55,7 @@ kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://docs.projectcal
 
 kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.4/config/manifests/metallb-native.yaml
 
-cat >>metallb-settings.yaml<<EOF
+cat <<EOF | sudo tee metallb-settings.yaml
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
