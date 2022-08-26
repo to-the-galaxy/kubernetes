@@ -8,6 +8,7 @@ echo "Task ===> remove old versions of docker, containerd, and runc"
 apt remove docker docker.io containerd runc
 apt install apt-transport-https ca-certificates curl -y
 
+echo "Task ===> add repos"
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
@@ -16,11 +17,13 @@ curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.
 
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
+echo "Task ===> update new repos"
 apt update
-apt install docker-ce docker-ce-cli containerd.io -y
+apt install -qq docker-ce docker-ce-cli containerd.io -y
 apt install -qq -y kubeadm=1.24.0-00 kubelet=1.24.0-00 kubectl=1.24.0-00
 apt-mark hold kubelet kubeadm kubectl
 
+echo "Task ===> containerd config"
 mkdir -p /etc/containerd
 containerd config default > /etc/containerd/config.toml
 sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
@@ -32,10 +35,13 @@ EOF
 # vim /etc/containerd/config.toml # remove cri from disabled plugins, if listed
 systemctl restart containerd
 systemctl enable containerd
+
+echo "Task ===> disable swap and ufw"
 sed -i '/swap/d' /etc/fstab
 swapoff -a
 systemctl disable --now ufw
 
+echo "Task ===> bridge settings"
 cat >>/etc/sysctl.d/kubernetes.conf<<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables  = 1
@@ -44,6 +50,7 @@ EOF
 
 sysctl --system 
 
+echo "Task ===> init cluster"
 kubeadm init \
   --control-plane-endpoint="192.168.56.101:6443" \
   --apiserver-advertise-address=192.168.56.101 \
