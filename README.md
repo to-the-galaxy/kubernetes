@@ -1,2 +1,5 @@
-# kubernetes
-Sample Kubernetes yaml-files
+# Kubernetes
+
+Content:
+
+* Scripts to setup Kubernetes on an Ubuntu-server
