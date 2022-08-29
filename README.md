@@ -178,5 +178,11 @@ spec:
 kubectl apply -f <metallb-settings-file>.yaml
 ```
 
+## Common additional steps
 
+It is recommended to also add the following to the cluster, as it adds functionality which is normally needed:
+
+* Install `cert-manager`
+* Install `traefik`
+* Install `longhorn`
 
