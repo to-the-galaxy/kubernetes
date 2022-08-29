@@ -37,7 +37,7 @@ metadata:
   namespace: cert-manager
 type: Opaque
 stringData:
-  cloudflare-token: B4cDlPJ6rlqKRrGKl3abARS1AcvdoAZhDtph8kbO
+  cloudflare-token: <token>
 EOF
 kubectl apply -f secret-cf-token.yaml
 
