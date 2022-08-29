@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: whoami
+  name: whoami
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - image: traefik/whoami:latest
+          imagePullPolicy: IfNotPresent
+          name: whoami
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: whoami
+  ports:
+    - port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: whoami-ingressroute
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(\`local.example.io\`) && (PathPrefix(\`/whoami\`))
+    kind: Rule
+    services:
+    - name: whoami-svc
+      namespace: default
+      port: 80
+  tls:
+    secretName: local-example-io-staging-tls
