@@ -1,0 +1,55 @@
+## Vagrant machines
+
+Vagrant-file (also availabe in the samples folder (remember to rename before use)):
+
+```ruby
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  MACHINES = 2 # Number of machines to create
+
+  (1..MACHINES).each do |i|
+
+    config.vm.define "k8smachine#{i}" do |node|
+      node.vm.box = "generic/ubuntu2204"
+      node.vm.box_check_update = false
+      node.vm.box_version = "4.0.2"
+      node.vm.hostname = "k8smachine#{i}.local"
+      node.vm.network "private_network", ip: "192.168.56.10#{i}"
+    end
+
+    # Provider
+    config.vm.provider "virtualbox" do |vb|
+      # vb.memory = "2048"
+      vb.memory = "4096"
+    end
+  end
+end
+```
+
+Start machines:
+
+```bash
+vagrant up
+```
+
+Access machine
+
+```
+vagrant ssh
+vagrant ssh <name of machine>
+```
+
+Stop machine(s)
+
+```
+vagrant halt
+```
+
+Delete machine(s)
+
+```bash
+vagrant destroy
+```
