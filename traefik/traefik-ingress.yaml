@@ -18,4 +18,4 @@ spec:
     - name: api@internal
       kind: TraefikService
   tls:
-    secretName: local-example-io-staging-tls
+    secretName: mydomainexample-io-staging-tls

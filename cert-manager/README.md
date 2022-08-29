@@ -63,10 +63,45 @@ Now, **create a certificate request**
 kubectl apply -f mydomainexample-oi-certificate.yaml
 ```
 
-## Check status (but wait some time)
+## Check status (it may take 15 min.)
 
 ```bash
 kubectl get certificates
 kubectl get challenges --all-namespaces
 kubectl get all -n cert-manager
 ```
+
+## Troubleshooting
+
+First:
+
+```bash
+kubectl get clusterissuer
+
+kubectl get certificates
+
+kubectl get certificaterequest
+
+kubectl get secret -A
+
+kubectl describe secret <name-of-secret>
+
+# If output is similar to
+NAME                     READY   SECRET                   AGE
+<name-of-certificate>    False   <name>-staging-tls       19m
+
+# Get more info by
+kubectl describe certificate <name-of-certificate>
+
+# Output sample
+Events:
+  Type    Reason     Age   From                    Message
+  ----    ------     ----  ----                    -------
+  Normal  Issuing    20m   cert...trigger          Issuing certificate as Secret does not exist
+  Normal  Generated  20m   cert...key-manager      Stored ... temporary ..."<name-of-certificate>vsz8b"
+  Normal  Requested  20m   cert...request-manager  ...CertificateRequest ... "<name-of-certificate>sqzzm"
+  
+# Get info on the request
+kubectl describe certificaterequest <name-of-certificate>sqzzm
+```
+
