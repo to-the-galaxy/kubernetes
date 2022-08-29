@@ -1,6 +1,11 @@
 #!/bin/bash
 
 echo "Ready to start!!!"
+
+#------------------------------------------------------------------------------
+#                              Specify some settings
+#------------------------------------------------------------------------------
+
 echo "Specify some settings for Kubernetes:"
 
 default_ip=$(ip addr show $(ip route | awk '/default/ { print $5 }') | grep "inet" | head -n 1 | awk '/inet/ {print $2}' | cut -d'/' -f1)
@@ -66,6 +71,11 @@ then
     exit
 fi
 echo ""
+
+#------------------------------------------------------------------------------
+#                              apt update
+#------------------------------------------------------------------------------
+
 echo "** Task == apt update"
  
 # apt update and send stdout (1) to /dev/null, and send stderr (2) to the same as stdout
@@ -79,6 +89,10 @@ else
 	exit
 fi
 
+#------------------------------------------------------------------------------
+#                              Remove old versions
+#------------------------------------------------------------------------------
+
 echo "** Task == remove old versions of docker, containerd, and runc"
 apt remove docker docker.io containerd runc > /dev/null 2>&1
 
@@ -90,6 +104,10 @@ else
 	exit
 fi
 
+#------------------------------------------------------------------------------
+#                           Install needed tools
+#------------------------------------------------------------------------------
+
 echo "** Task == install apt-transport-https ca-certificates curl"
 apt install apt-transport-https ca-certificates curl -y -qq > /dev/null 2>&1
 
@@ -100,6 +118,10 @@ else
 	printf "   Install failed...\nExiting!!!\n"
 	exit
 fi
+
+#------------------------------------------------------------------------------
+#                          New keys and repos
+#------------------------------------------------------------------------------
 
 echo "** Task == import docker repo and key" 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
@@ -186,6 +208,10 @@ then
 else
 	echo "   Error = apt-mark hold kubeadm kubelet kubectl"
 fi
+
+#------------------------------------------------------------------------------
+#                          New keys and repos
+#------------------------------------------------------------------------------
 
 echo "** Task == containerd config"
 mkdir -p /etc/containerd > /dev/null 2>&1
