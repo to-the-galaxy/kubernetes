@@ -24,8 +24,8 @@
 | kubectl               | 1.24.3             | Kubead, kubectl, and kubelet must all be the same version number                                                             |
 | kubelet               | 1.24.3             | Kubead, kubectl, and kubelet must all be the same version number                                                             |
 | containerd            | latest           | Consider locking down version number                     |
-| calico | 3.18 | | |
-| metallb | 0.13.4 | | |
+| calico | 3.18 | |
+| metallb | 0.13.4 | Notice, there are important difference between v0.12 and v0.13. |
 | cert-manager | | (optional) |
 | traefik | | (optional) |
 | longhorn | | (optional) |
@@ -109,4 +109,74 @@ sysctl --system
 ```
 
 ## Initialise cluster
+
+**Init**
+
+```bash
+sudo kubeadm init \
+  --control-plane-endpoint="192.168.56.101:6443" \
+  --apiserver-advertise-address="192.168.56.101" \
+  --pod-network-cidr="10.244.0.0/16"
+```
+
+Now, to manage the cluster as non-root user (with `kubectl --kubeconfig=/etc/kubernetes/admin.conf <command>`) run the following three lines:
+
+```bash
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+Then **untaint nodes** to allow for pod creation. This is not needed if work nodes have joined the cluster, and if they run all pods.
+
+```bash
+kubectl taint nodes --all node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
+
+
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.4/config/manifests/metallb-native.yaml
+```
+
+**Install network tool**, `calico`, to enable communication in the cluster.
+
+```bash
+kubectl apply -f https://docs.projectcalico.org/v3.18/manifests/calico.yaml
+```
+
+**Install loadbalancer**, `metallb`, to handle ip addresses. This is needed for Kubernetes on bare metal.
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.4/config/manifests/metallb-native.yaml
+```
+
+Now, **setup the loadbalancer**
+
+Create a yaml-file (for example metallb-settings.yaml) with the following content - or use sample from the metallb-folder:
+
+```yaml
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.56.200-192.168.56.210
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - first-pool
+```
+
+**Apply** the settings from the yaml-file:
+
+```bash
+kubectl apply -f <metallb-settings-file>.yaml
+```
+
+
 
