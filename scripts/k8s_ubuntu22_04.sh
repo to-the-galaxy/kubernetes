@@ -410,7 +410,14 @@ if [ $var_metallb_status -eq 0 ]
 then
     echo "Success apply metallb-settings"
 else
-    echo "Problems applying metallb-settings. Try to run 'kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f metallb-settings.yaml' manually"
+    echo "Problems applying metallb-settings!!! Try manually to run:"
+	echo ""
+	echo " 'kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f metallb-settings.yaml'"
+	echo ""	
+	echo "or"
+	echo ""
+	echo " 'kubectl apply -f metallb-settings.yaml'"
+	echo ""
 fi
 
 echo "Setup kubectl for a specific user"
