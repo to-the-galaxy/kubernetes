@@ -42,7 +42,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: Host(\`local.example.io\`) && (PathPrefix(\`/whoami\`))
+  - match: Host(`local.example.io`) && (PathPrefix(`/whoami`))
     kind: Rule
     services:
     - name: whoami-svc
