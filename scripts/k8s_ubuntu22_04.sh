@@ -174,25 +174,26 @@ echo "** Task == apt update and install kubernetes"
 apt update -qq > /dev/null 2>&1
 var_apt=$?
 
-apt install docker-ce -qq > /dev/null 2>&1
+apt install docker-ce -qq -y > /dev/null 2>&1
 var_apt_docker_ce=$?
 
-apt install docker-ce-cli -qq > /dev/null 2>&1
+apt install docker-ce-cli -qq-y > /dev/null 2>&1
 var_apt_docker_ce_cli=$?
 
-apt install containerd.io -qq > /dev/null 2>&1
+apt install containerd.io -qq -y > /dev/null 2>&1
 var_apt_containerd=$?
 
-apt install kubeadm=1.24.0-00 -qq > /dev/null 2>&1
+
+apt install kubeadm=1.24.0-00 -qq -y > /dev/null 2>&1
 var_apt_kubeadm=$?
 
-apt install kubelet=1.24.0-00  -qq > /dev/null 2>&1
+apt install kubelet=1.24.0-00  -qq -y > /dev/null 2>&1
 var_apt_kubelet=$?
 
-apt install kubectl=1.24.0-00 -qq > /dev/null 2>&1
+apt install kubectl=1.24.0-00 -qq -y > /dev/null 2>&1
 var_apt_kubectl=$?
 
-apt-mark hold kubelet kubeadm kubectl > /dev/null 2>&1
+apt-mark hold kubelet kubeadm kubectl -y > /dev/null 2>&1
 var_apt_mark=$?
 
 if [ $var_apt -eq 0 ]; then echo "   OK = apt update"; else echo "   Error = apt update"; fi
