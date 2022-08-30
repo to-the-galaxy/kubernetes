@@ -2,16 +2,16 @@
 
 **Assumptions**
 
-| Parameter       | Value or attribute | Comment                                                      |
-| --------------- | ------------------ | ------------------------------------------------------------ |
-| Install method  | `helm`             | `traefik` may be installed in other ways.                    |
-| `cert-manager`  | required           |                                                              |
-| certificate     | default or custom  | If custom certificate is not found, then `traefik` defaults to its default non-third party signed certificate. |
-| dashboard       | true               | Dashboard is enabled                                         |
-| loadbalancer ip | 192.168.100.240    | Set the value needed in the traefik-values-helm.yaml, which is passed to `helm` |
-| user name       | admin              | Dashboard user                                               |
-| password        | dashboard          | Password of the user of dashboard                            |
-| ingress route   | local.example.io   | Remember configure DNS to route traffic to local.example.io towards 192.186.100.240 |
+| Parameter       | Value or attribute       | Comment                                                      |
+| --------------- | ------------------------ | ------------------------------------------------------------ |
+| Install method  | `helm`                   | `traefik` may be installed in other ways.                    |
+| `cert-manager`  | required                 |                                                              |
+| certificate     | default or custom        | If custom certificate is not found, then `traefik` defaults to its default non-third party signed certificate. |
+| dashboard       | true                     | Dashboard is enabled                                         |
+| loadbalancer ip | 192.168.100.240          | Set the value needed in the traefik-values-helm.yaml, which is passed to `helm` |
+| user name       | admin                    | Dashboard user                                               |
+| password        | dashboard                | Password of the user of dashboard                            |
+| ingress route   | local.mydomainexample.io | Remember configure DNS to route traffic to local.example.io towards 192.186.100.240 |
 
 
 
@@ -96,13 +96,13 @@ kubectl apply -f traefik-ingress.yaml
 **Remember** to create a DNS recoard. This can be done, for example on the client computer by adding a rule to `/etc/hosts`.
 
 ```
-local.example.io
+local.mydomainexample.io
 ```
 
 `curl` **certificate**
 
 ```
-curl --insecure -vvI https://local.example.io 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'
+curl --insecure -vvI https://local.mydomainexample.io 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }'
 ```
 
 ### Optional: Whoami-deployment with ingressroute
@@ -116,5 +116,5 @@ kubectl apply -f whoami-deployment-service-ingressroute.yaml
 **Test** (DNS-record is required the domain)
 
 ```
-local.example.io/whoami
+local.mydomainexample.io/whoami
 ```
