@@ -183,7 +183,6 @@ var_apt_docker_ce_cli=$?
 apt install containerd.io -qq -y > /dev/null 2>&1
 var_apt_containerd=$?
 
-
 apt install kubeadm=1.24.0-00 -qq -y > /dev/null 2>&1
 var_apt_kubeadm=$?
 
