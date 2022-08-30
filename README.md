@@ -131,9 +131,6 @@ Then **untaint nodes** to allow for pod creation. This is not needed if work nod
 
 ```bash
 kubectl taint nodes --all node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
-
-
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.4/config/manifests/metallb-native.yaml
 ```
 
 **Install network tool**, `calico`, to enable communication in the cluster.
