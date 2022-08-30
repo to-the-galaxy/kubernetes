@@ -19,14 +19,15 @@ helm upgrade --install cert-manager jetstack/cert-manager --namespace cert-manag
 
 **Assumptions**
 
-| Attribute                          | Value                                    |
-| ---------------------------------- | ---------------------------------------- |
-| domain name                        | mydomainexample.oi                       |
-| email                              | myemail@mymail.oi                        |
-| API Token                          | fake_token_ym9jr33kAHySk7gAL33FOXQxR5GrX |
-| K8s secret for Cloudfare API Token | cloudflare-api-token-secret              |
-| K8s clusterissuer                  | letsencrypt-staging-clusterissuer        |
-| K8s certificate (signing request)  | mydomainexample-oi-certificate           |
+| Attribute                                     | Value                                    |
+| --------------------------------------------- | ---------------------------------------- |
+| domain name                                   | mydomainexample.oi                       |
+| email                                         | myemail@mymail.oi                        |
+| API Token                                     | fake_token_ym9jr33kAHySk7gAL33FOXQxR5GrX |
+| K8s secret for Cloudfare API Token            | cloudflare-api-token-secret              |
+| K8s clusterissuer                             | letsencrypt-staging-clusterissuer        |
+| K8s certificate (signing request) (name)      | mydomainexample-oi-certificate           |
+| K8s certificate (signing request) (namespace) | traefik                                  |
 
 **Create API token** www.cloudflare.com:
 
@@ -85,6 +86,8 @@ kubectl get certificaterequest
 kubectl get secret -A
 
 kubectl describe secret <name-of-secret>
+
+kubectl logs -n traefik traefik-<pod id>
 
 # If output is similar to
 NAME                     READY   SECRET                   AGE
