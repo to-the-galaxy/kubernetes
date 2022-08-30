@@ -26,7 +26,7 @@ helm upgrade --install cert-manager jetstack/cert-manager --namespace cert-manag
 | API Token                                     | fake_token_ym9jr33kAHySk7gAL33FOXQxR5GrX |
 | K8s secret for Cloudfare API Token            | cloudflare-api-token-secret              |
 | K8s clusterissuer                             | letsencrypt-staging-clusterissuer        |
-| K8s certificate (signing request) (name)      | mydomainexample-oi-certificate           |
+| K8s certificate (signing request) (name)      | mydomainexample-io-certificate           |
 | K8s certificate (signing request) (namespace) | traefik                                  |
 
 **Create API token** www.cloudflare.com:
@@ -61,7 +61,7 @@ Now, **create a certificate request**
 
 ```bash
 # Use template in this repo
-kubectl apply -f mydomainexample-oi-certificate.yaml
+kubectl apply -f mydomainexample-io-certificate.yaml
 ```
 
 ## Check status (it may take 15 min.)
@@ -79,7 +79,7 @@ First:
 ```bash
 kubectl get clusterissuer
 
-kubectl get certificates
+kubectl get certificates --all-namespaces
 
 kubectl get certificaterequest
 
