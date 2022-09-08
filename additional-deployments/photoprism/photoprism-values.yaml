@@ -1,34 +1,30 @@
-# Default values for PhotoPrism Helm chart
+# Mostely default values for PhotoPrism Helm chart
+# For more options see the values for the helm chart. Here only
+# selected options are used.
 
+# Image specification
 image:
   repository: photoprism/photoprism
-  tag: "20211215"
+  tag: latest # Or specify this version "20211215"
   pullPolicy: IfNotPresent
 
-nameOverride: ""
-fullnameOverride: ""
+# Default password is 'photoprism'
+# adminPassword: ""
 
-# Defaults to 'photoprism'
-#adminPassword: ""
 # Use existing secret for Admin password, key 'PHOTOPRISM_ADMIN_PASSWORD'
-#existingSecret:
+# existingSecret:
 
-# Available properties can be discovered by running the command:
-#   photoprism config
-# The sample docker-compose.yml file in the PhotoPrism git repo
-#  is also a good place to look:
-# https://github.com/photoprism/photoprism/blob/develop/docker-compose.yml
+# The Photoprism repo contians good documentation of available configurations.
 config:
-  PHOTOPRISM_DEBUG: true
-  PHOTOPRISM_PUBLIC: false
-  PHOTOPRISM_READONLY: true
+  PHOTOPRISM_DEBUG: false        # Set to true to get more debug logs
+  PHOTOPRISM_PUBLIC: true        # If true then no login is required
+  PHOTOPRISM_READONLY: false     # Set to true to enable readonly
+  PHOTOPRISM_HTTP_MODE: release  # Different modes: debug, release, or test
+  # Setting the PHOTOPRISM_SITE_URL causes problems. Use with caution
+  PHOTOPRISM_SITE_URL: local.example.io
 
 # nodeSelector:
 #   kubernetes.io/hostname:
-
-# sidecarContainers:
-#   - name: sidecar
-#     image: alpine
 
 persistence:
   enabled: true
@@ -45,43 +41,16 @@ persistence:
   volumes:
   - name: originals
     nfs:
-      server: my.nas.hostname
-      path: /media
+      server: <ip address>
+      path: <folder path on nas-server>
   - name: storage
     nfs:
-      server: my.nas.hostname
-      path: /photoprism
-
-  # volumeClaimTemplates:
-  # - metadata:
-  #     name: photoprism
-  #   spec:
-  #     accessModes: [ "ReadWriteMany" ]
-  #     storageClassName: "my-storage-class"   # You'll probably want to ensure your storage class has `reclaimPolicy: Retain`
-  #     resources:
-  #       requests:
-  #         storage: 100Gi
-
+      server: <ip address>
+      path: <folder path on nas-server>
 
 service:
   type: ClusterIP
   port: 80
-
-# ingress:
-#   enabled: false
-#   annotations:
-#     kubernetes.io/ingress.class: nginx
-#     kubernetes.io/tls-acme: "true"
-#     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
-#   hosts:
-#   - host: my.domain.com
-#     paths:
-#     - path: /
-#       pathtType: Prefix
-#   tls:
-#   - hosts:
-#     - my.domain.com
-#     secretName: photoprism-cert
 
 # securityContext:
 #   fsGroup: 100
@@ -101,15 +70,6 @@ resources:
 # affinity: {}
 
 
-# To use a remote MySQL instance, set the value for driver to 'mysql'
+# A remote MySQL instance can be used, but needs to be configured
 database:
   driver: sqlite
-# Set these values only if the mysql driver is used
-  # name: photoprism
-  # user: photoprism
-  # password: photoprism
-  # port: 3306
-  # host: mariadb.db-mariadb
-# Ignore above settings and use existing secret for database DSN. Key 'PHOTOPRISM_DATABASE_DSN'
-  # existingSecret:
-
